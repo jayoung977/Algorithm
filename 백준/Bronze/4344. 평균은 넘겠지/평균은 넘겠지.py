@@ -1,5 +1,4 @@
 num = int(input())
-per_li = []
 for i in range(num):
     li = list(map(int,input().split()))
     total_num = li[0]
