@@ -7,7 +7,4 @@ for i in range(num):
     mean = sum(score_li) / total_num
     upper_std = len([ i for i in score_li if i > mean])
     per =  "%0.3f%%" % (upper_std/total_num*100)
-    per_li.append(per)
-    
-for p in per_li:
-    print(p)
+    print(per)
