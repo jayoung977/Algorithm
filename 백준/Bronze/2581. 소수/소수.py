@@ -1,8 +1,6 @@
 m =  int(input())
 n =  int(input())
 
-# sum = 0
-# first = 0
 li = []
 for num in range(m,n+1):
     cnt = 0
@@ -13,10 +11,6 @@ for num in range(m,n+1):
                 break
         if cnt == 0:
             li.append(num)
-            # sum+=num
-            # first +=1
-        # if first ==1:
-        #     first_num =  num
 
 if len(li) == 0:
     print(-1)
