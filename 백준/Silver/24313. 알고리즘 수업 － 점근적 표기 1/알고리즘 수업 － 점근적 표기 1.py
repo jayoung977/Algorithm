@@ -1,5 +1,7 @@
-a,b=map(int,input().split())
+a1,a0=map(int,input().split())
 c=int(input())
-n=int(input())
-r=1 if a*n+b<=c*n and c>=a else 0
-print(r)
+n0=int(input())
+if a1*n0+a0<=c*n0 and c>=a1:
+    print(1)  
+else:
+    print(0) 
