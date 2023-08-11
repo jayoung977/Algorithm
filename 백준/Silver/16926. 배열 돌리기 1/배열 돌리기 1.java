@@ -28,9 +28,9 @@ public class Main {
 		
 		for(int i = 0 ; i < R; i ++) {
 			for (int j = 0; j < grop_value; j++) {
+				int value = map[j][j];
 				int r = j;
 				int c = j;
-				int value = map[r][c];
 				int idx = 0;
 				while(idx < 4) {
 					int nr = r + dr[idx];
