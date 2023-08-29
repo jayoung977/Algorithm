@@ -1,30 +1,39 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-	static int[][] dp;
-	static int T,K,N;
-	public static void main(String[] args) {
-		Scanner scann = new Scanner(System.in);
-		T = scann.nextInt();
+
+	static int T;
+	static int k, n;
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+
+		T = Integer.parseInt(br.readLine());
+		int[][] map;
+
 		for (int t = 1; t <= T; t++) {
-			K = scann.nextInt();
-			N = scann.nextInt();
-			dp = new int[15][15];
-			
-			for (int i = 1; i < 15; i++) {
-				dp[0][i] =i;
+			k = Integer.parseInt(br.readLine());
+			n = Integer.parseInt(br.readLine());
+			map = new int[15][15];
+
+			for (int i = 0; i <= n; i++) {
+				map[0][i] = i;
 			}
-			
-			for (int i = 1; i <15 ; i++) {
-				for (int j = 1; j < 15; j++) {
-					for (int j2 = 1; j2 <= j; j2++) {
-						dp[i][j] +=  dp[i-1][j2];
-					}
-					
+
+			for (int i = 0; i < k; i++) {
+				int sum = 0;
+				int index = 1;
+				for (int j = 1; j <= n; j++) {
+					sum += map[i][j];
+					map[i + 1][index++] = sum;
 				}
 			}
-			System.out.println(dp[K][N]);
+			sb.append(map[k][n] + "\n");
 		}
+		System.out.println(sb);
 	}
-
 }
