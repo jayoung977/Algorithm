@@ -1,103 +1,115 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.StringTokenizer;
 
+/*
+ 조건:
+ 말 (r-2,c-1),(r-1,c-2),(r+1,c-2),(r+2,c-1)
+   (r-2,c+1),(r-1,c+2),(r+1,c+2),(r+2,c+1) 
+ 원숭이는 능력이 부족해서 총 K번만 위와 같이 움직일 수 있고, 그 외에는 그냥 인접한 칸으로만 움직일 수 있다.   
+ 대각선 방향은 인접한 칸에 포함되지 않는다.   
+ 원숭이의 동작수의 최솟값
+ 시작점에서 도착점까지 갈 수 없는 경우엔 -1
+ 첫째 줄에 정수 K
+ 둘째 줄에 격자판의 가로길이 W, 세로길이 H
+ 0은 아무것도 없는 평지, 1은 장애물. 장애물이 있는 곳으로는 이동할 수 없다
+ W와 H는 1이상 200이하의 자연수이고, K는 0이상 30이하의 정수이다.
+ 2 초
+ 
+ 아이디어: BFS + 3차원 배열
+ 초기화 K+1?
+ 
+ 오답노트: 무조건 방문처리를 하면 안된다 특히 BFS!!!!!!!!!!!!!! (dfs는 지울 수 있어서 방문 처리 true - false가능 )
+ */
+import java.io.*;
+import java.util.*;
 public class Main {
-
-	static int[] dr = { 0, 1, 0, -1, -1, -2, -2, -1, 1, 2, 2, 1 }; //행 이동. 인덱스 0~3 : 한 칸 이동, 인덱스 4~11 : 말처럼 이동
-	static int[] dc = { 1, 0, -1, 0, -2, -1, 1, 2, 2, 1, -1, -2 }; //열 이동. 인덱스 0~3 : 한 칸 이동, 인덱스 4~11 : 말처럼 이동
-	static int K, W, H;
-	static int[][] map;
-	static boolean[][][] visited;
-	static int cnt;
-
-	public static void main(String[] args) throws NumberFormatException, IOException {
-
+	static int K;
+	static int H,W;
+	static int [][] map;
+	static boolean [][][] visited;
+	static Queue<int []> q;
+	static int answer;
+	static int[] dr = {-1,0,1,0,-2,-1,1,2,-2,-1,1,2};
+	static int[] dc = {0,1,0,-1,-1,-2,-2,-1,1,2,2,1};
+	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-
-		K = Integer.parseInt(br.readLine()); //K번 말처럼 이동할 수 있음
+		K = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		W= Integer.parseInt(st.nextToken()); //열 개수
+		H = Integer.parseInt(st.nextToken());//행 개수
+		init();
 		
-		st = new StringTokenizer(br.readLine());
-		W = Integer.parseInt(st.nextToken()); // 가로 길이. 열의 수
-		H = Integer.parseInt(st.nextToken()); // 세로 길이. 행의 수
-		map = new int[H][W]; //격자판
-		visited = new boolean[H][W][K + 1]; //방문 체크
-
 		for (int i = 0; i < H; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < W; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		// ==================입력 완료
-
-		System.out.println(bfs());
-
+		
+		//입력 끝
+		if(H==1 && W==1) {
+			if(map[0][0]==1) {
+				System.out.println(-1);
+				System.exit(0);
+			}
+		}
+		q.offer(new int [] {0,0,0,0});
+		bfs();
+		if(answer== Integer.MAX_VALUE/1000) {
+			System.out.println(-1);
+		}else {
+			System.out.println(answer);
+		}
 	}
+	private static void bfs() {
 
-	//시작지점에서 도착지점까지의 거리를 리턴하는 함수
-	static int bfs() {
-		Queue<int[]> q = new ArrayDeque<>();
-		q.offer(new int[] { 0, 0, 0 }); // 0,0에서 시작(말처럼 0번 이동 상태)
-		visited[0][0][0] = true;
-
-		while (!q.isEmpty()) {
-			int qsize = q.size();
-			for (int i = 0; i < qsize; i++) {
+		while(true) {
+			int size = q.size();
+			if(size==0) {
+				break;
+			}
+			
+			for (int i = 0; i < size; i++) {
 				int[] cur = q.poll();
 				int r = cur[0];
 				int c = cur[1];
-				int k = cur[2];
-
-				if (r == H - 1 && c == W - 1) { //도착지점에 도착하면
-					return cnt; //너비 리턴
+				int cnt = cur[2];
+				int k = cur[3];
+				if(r==H-1&&c==W-1) {
+					answer = Math.min(answer, cnt);
+					return;
 				}
-
-				int size = 0; // 방향 배열 사용 크기 (인덱스0~3만 쓸 것인지, 12개 모두 쓸 것인지)
-				// 말처럼 K번 이동 안 했으면 12개 방향 모두 가능
-				if (k < K) {
-					size = 12;
-				}
-				// 말처럼 K번 이동했으면 상하좌우로만 이동 가능
-				else {
-					size = 4;
-				}
-				for (int d = 0; d < size; d++) { //저장한 사용 크기만큼만 for문을 돌림
-					int nr = r + dr[d];
-					int nc = c + dc[d];
-
-					if (!check(nr, nc)) { //범위를 벗어난 경우
-						continue;
+				for (int d = 0; d < dr.length; d++) {
+					int nr=r+dr[d];
+					int nc=c+dc[d] ;
+					
+					
+					if(!check(nr,nc)) continue;
+					if( map[nr][nc]!=0)continue;
+					if(d<=3  && !visited[nr][nc][k] ) {
+						visited[nr][nc][k] = true;
+						q.offer(new int[] {nr,nc,cnt+1,k});
 					}
-					if (map[nr][nc] == 1) { //벽을 만난 경우
-						continue;
-					}
-					if (d >= 4) { //말처럼 이동하는 경우
-						if (visited[nr][nc][k + 1]) {
-							continue;
-						}
-						q.offer(new int[] { nr, nc, k + 1 }); //말처럼 이동하므로 k+1
-						visited[nr][nc][k + 1] = true; //방문 처리
-					}
-					if (d < 4) { //말처럼 이동하지 않고 그냥 이동하는 경우
-						if (visited[nr][nc][k]) {
-							continue;
-						}
-						q.offer(new int[] { nr, nc, k }); //그냥 이동하므로 k 유지
-						visited[nr][nc][k] = true; //방문 처리
+					else if(d>3 && k<K && !visited[nr][nc][k+1]) { //K
+						visited[nr][nc][k+1] = true;
+						q.offer(new int[] {nr,nc,cnt+1,k+1});
+					
 					}
 				}
+				
 			}
-			cnt++; //qsize만큼 돌고 나면 너비가 증가함
+			
 		}
-		return -1; //q가 빌 때까지 도착지점에 다다르지 못한 경우 -1 리턴
+		
+		
 	}
 
-	static boolean check(int r, int c) {
-		return r >= 0 && r < H && c >= 0 && c < W;
+	private static boolean check(int r, int c) {
+		return r>=0 && c>=0 && r<H && c<W;
 	}
+	private static void init() {
+		map = new int[H][W];
+		visited = new boolean[H][W][K+1];
+		q = new LinkedList<>();
+		answer = Integer.MAX_VALUE/1000;
+	}
+
 }
