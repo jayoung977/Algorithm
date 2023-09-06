@@ -54,7 +54,7 @@ public class Main {
 //				System.out.println("nr: "+nr +" nc: "+nc);
 //				System.out.println(isfinished);
 				if(isfinished) break;
-				dfs(nr,nc);
+//				dfs(nr,nc);
 //				else{dfs(nr,nc);}
 				
 			}
