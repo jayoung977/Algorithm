@@ -1,104 +1,86 @@
 
-import java.util.Arrays;
-import java.util.Scanner;
-
+import java.util.*;
+import java.io.*;
 public class Solution {
-	static int T;
-	static int N;
-	static int [][] map;
-	static double E; 
-	
-	static class Edge implements Comparable<Edge>{
-		int s;
-		int e;
-		long w;
-		public Edge(int s, int e, long w) {
-			super();
-			this.s = s;
-			this.e = e;
-			this.w = w;
+	static int T,V;
+	static double E;
+	static double min;
+	static class Node implements Comparable<Node>{
+		int v;
+		double w;
+		public Node(int v, double w) {
+			this.v=v;
+			this.w=w;
 		}
 		@Override
-		public int compareTo(Edge o) {
-			return Long.compare(this.w, o.w);
+		public int compareTo(Node o) {
+			return Double.compare(this.w, o.w);
 		}
 	}
-	static Edge[] edges;
-	static int [] p;
-	static int [] r;
-	public static void main(String[] args) {
-		Scanner scann= new Scanner(System.in);
-		T =scann.nextInt();
-		for (int t = 1; t <= T; t++) {
-			N=scann.nextInt();
-			map=new int[N][2];
-			for (int i = 0; i < N; i++) {
-				map[i][0]=scann.nextInt();
+	static List<Node>[] list;
+	static PriorityQueue<Node> pq;
+	static boolean[] visited;
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		T=Integer.parseInt(br.readLine());
+		for(int t=1; t<=T; t++) {
+			V=Integer.parseInt(br.readLine());			
+			int[][] arr = new int[V+1][2];
+			//X
+			st=new StringTokenizer(br.readLine());
+			for(int i=1; i<V+1; i++) {
+				arr[i][0]=Integer.parseInt(st.nextToken());
 			}
-			for (int i = 0; i < N; i++) {
-				map[i][1]=scann.nextInt();
-			}			
-			E =scann.nextDouble();
-			edges=new Edge[N*(N-1)/2]; //완전그래프 //pq로 바꿀 수 있음
-			int count=0;
-			for (int i = 0; i < N-1; i++) {
-				for (int j = i+1; j < N; j++) {
-					edges[count++]=new Edge(i,j,
-							distance(map[i][0],map[j][0],map[i][1],map[j][1])); 
+			//Y
+			st=new StringTokenizer(br.readLine());
+			for(int i=1; i<V+1; i++) {
+				arr[i][1]=Integer.parseInt(st.nextToken());
+			}
+			E=Double.parseDouble(br.readLine());
+			min=0;
+			list = new ArrayList[V+1];
+			for(int i=0;i<V+1;i++) {
+				list[i]=new ArrayList<>();
+			}
+			
+			for(int i=1;i<V+1;i++) {
+				for(int j=i+1;j<V+1;j++) {
+//					System.out.println(i+","+j);
+					double w = Math.pow(Math.abs(arr[i][0]-arr[j][0]),2)+Math.pow(Math.abs(arr[i][1]-arr[j][1]),2);
+					w = E*w;
+					list[i].add(new Node(j,w));
+					list[j].add(new Node(i,w));
 				}
 			}
-			Arrays.sort(edges); //w작은 순으로 정렬 가능 
-			//시작
-			p = new int[N];
-			r = new int[N];
-			makeSet();
-			double result=0.0;
-			int cnt = 0;
-			for (int i = 0; i < (N*(N-1)/2); i++) {
-				if(union(edges[i].s,edges[i].e)) {
-					result+=edges[i].w;
-					cnt++;
-					if(cnt==N-1) {
-						break;
-					}
-				}
+	
+			pq = new PriorityQueue<>();
+			visited=new boolean[V+1];
+			System.out.println("#"+t+" "+prim());
+		}
+	
+
+	}
+	static long prim() {
+		pq.offer(new Node(1,0));
+		int cnt=0;
+		while(!pq.isEmpty()) {
+			Node cur = pq.poll();
+			if(visited[cur.v]) continue;
+			visited[cur.v]=true;
+			min+=cur.w;
+			if(++cnt==V) return Math.round(min);
+			for(int i=0; i<list[cur.v].size();i++) {
+				Node next = list[cur.v].get(i);
+				if(visited[next.v]) continue;
+				pq.offer(next);
 			}
-			System.out.println(String.format("#%d %.0f", t,E*result));
 			
 		}
-
-	}
-
-	private static boolean union(int x, int y) {
-		x=find(x);
-		y=find(y);
-		if(x==y)return false;
-		if(r[x]<r[y]) {
-			r[y]+=r[x];
-			p[x]=y;
-		}else {
-			r[x]+=r[y];
-			p[y]=x;
-		}
-		return true;
-	}
-
-	private static int find(int x) {
-		if(x==p[x])return p[x];
-		else return p[x]=find(p[x]);
-	}
-
-	private static void makeSet() {
-		for (int i = 0; i < N; i++) {
-			p[i]=i;
-			r[i]=1;
-		}
-	}
-	
-	
-
-	private static long distance(int x1,  int x2, int y1,int y2) {
-		return 0L+(0L+x1-x2)*(0L+x1-x2)+(0L+y1-y2)*(0L+y1-y2);
+		
+		
+		
+		return  Math.round(min);
 	}
 
 }
