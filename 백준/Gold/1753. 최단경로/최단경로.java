@@ -1,73 +1,67 @@
 import java.io.*;
 import java.util.*;
 public class Main {
-
-	static class Edge implements Comparable<Edge>{
-		int v;
-		int w;
-		public Edge(int v, int w) {
-			super();
-			this.v = v;
-			this.w = w;
+	static int V,E,K;
+	static class Node implements Comparable<Node>{
+		int v,w;
+		public Node(int v, int w){
+			this.v=v;
+			this.w=w;
 		}
 		@Override
-		public int compareTo(Edge o) {
+		public int compareTo(Node o) {
 			return Integer.compare(this.w, o.w);
-		};
+		}
 	}
-	//무한대로 하고 시작점을 0으로 바꾸는게 아이디어 <->프림은 걍 암거나
-	static int V,E,K;
-	static int [] distance;
-	static boolean [] visited;
-	static List<Edge>[] adj;
-	static int MM=Integer.MAX_VALUE/1000;
-	static PriorityQueue<Edge> points;
+	static List<Node>[] adj;
+	static PriorityQueue<Node> points;
+	static boolean[] visited;
+	static int[] distance;
+	static int MM = Integer.MAX_VALUE/1000;
 	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		V=Integer.parseInt(st.nextToken());
-		E=Integer.parseInt(st.nextToken());
-		K=Integer.parseInt(br.readLine());
-		adj=new ArrayList[V];
-		for (int i = 0; i < V; i++) {
-			adj[i]=new ArrayList<>();
-		}
-		for (int i = 0; i < E; i++) {
-			st = new StringTokenizer(br.readLine());
-			int s=Integer.parseInt(st.nextToken());
-			int e=Integer.parseInt(st.nextToken());
-			int w=Integer.parseInt(st.nextToken());
-			adj[s-1].add(new Edge(e-1,w)); //0부터라 -1함//양방향인지 확인
-		}
-		distance=new int[V];
-		Arrays.fill(distance, MM);
-		visited=new boolean[V];
+		V = Integer.parseInt(st.nextToken());
+		E = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(br.readLine());
+		adj = new ArrayList[V+1];
+		for(int i=0; i<V+1; i++) adj[i]=new ArrayList<>();
 		points=new PriorityQueue<>();
-		points.offer(new Edge(K-1,0));
-		distance[K-1]=0;
+		visited=new boolean[V+1];
+		distance = new int[V+1];
+		for(int i=0; i<V+1; i++) distance[i]=MM;
+		distance[K]=0;
+		
+		for(int i=0; i<E; i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
+			int w = Integer.parseInt(st.nextToken());
+			adj[s].add(new Node(e,w));
+		}
+		
+		points.offer(new Node(K,0));
 		while(!points.isEmpty()) {
-			Edge cur=points.poll();
+			Node cur = points.poll();
 			if(visited[cur.v]) continue;
 			visited[cur.v]=true;
-			for (Edge next:adj[cur.v]) {
-				if(visited[next.v]) continue;
-				//이부분만 프림과 다름/////////////////////
-				if(distance[next.v]>distance[cur.v]+next.w) { 
+			for(Node next:adj[cur.v]) {
+				if(visited[next.v])continue;
+				if(distance[next.v]>distance[cur.v]+next.w) {
 					distance[next.v]=distance[cur.v]+next.w;
-					points.offer(new Edge(next.v,distance[next.v]));//업데이트
-					
+					points.offer(new Node(next.v,distance[next.v]));
 				}
-				//////////////////////////////////////
-				
 			}
 		}
-		//K -> i
-		for (int i = 0; i < V; i++) {
-			if(distance[i]>=MM) {
-				System.out.println("INF");
-			}else {
-				System.out.println(distance[i]);//최단거리
-			}
+
+		for(int i=1;i<V+1; i++) {
+			int d = distance[i];
+			if(d==MM) System.out.println("INF");
+			else System.out.println(d);
 		}
+		
+		
+
 	}
+
 }
