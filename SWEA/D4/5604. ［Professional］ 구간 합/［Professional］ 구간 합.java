@@ -40,11 +40,10 @@ public class Solution {
 			for(int i=1; i<10; i++) {
 				sum+=cnts[i]*i;
 			}
-			System.out.println("#"+t+" "+sum);
-//			sb.append("#").append(t).append(" ").append(sum).append("\n");
+			sb.append("#").append(t).append(" ").append(sum).append("\n");
 			
 		}
-//		System.out.println(sb);
+		System.out.println(sb);
 		
 	}
 	static void parse(long x, long delta) {
