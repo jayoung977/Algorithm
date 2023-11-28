@@ -1,4 +1,3 @@
-friends = []
 def solution(n, weak, dist):
     length = len(weak)
     for i in range(length):
@@ -6,28 +5,20 @@ def solution(n, weak, dist):
     answer = len(dist)+1
     visited = [False  for _ in range(len(dist))]
     perm(dist,len(dist),[],visited)
-
-    for start in range(length):
-        for chosen in friends:
-            count=1
-            position = weak[start] + chosen[count-1]
-            for index in range(start, start + length):
-                if position < weak[index]:
-                    count +=1
-                    if(count > len(dist)):
-                        break
-                    position =  weak[index] + chosen[count-1]
-            answer = min(answer,count)
         
-    if(answer > len(dist)):
-        answer = -1
     return answer
-
-
+start = 0
+# def perm(arr, r):
+#     arr = sorted(arr)
+#     visited = [False  for _ in range(len(arr))]
+    
 def perm(arr,r,chosen,visited):
-    global friends
+    global start
     if len(chosen) == r:
-        friends.append(chosen[:])
+        start+=1
+        print(start,":",chosen)
+        count=1
+        # position = weak[]
         return 
     for i in range(len(arr)):
         if(visited[i]): continue
