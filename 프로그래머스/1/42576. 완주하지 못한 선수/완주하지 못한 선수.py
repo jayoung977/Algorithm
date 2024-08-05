@@ -1,16 +1,9 @@
 def solution(participant, completion):
-    participant.sort()
-    completion.sort()
-    
-    cnt = 0
+    d = dict()
+    sum = 0
     for p in participant:
-        if cnt < len(completion):
-            c = completion[cnt]
-            if p == c:
-                cnt+=1
-            else:
-                return p
-            
-        
-        
-    return p
+        d[hash(p)] = p
+        sum += hash(p)
+    for c in completion:
+        sum -= hash(c)
+    return d[sum]
