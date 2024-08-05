@@ -1,13 +1,10 @@
 def solution(phone_book):
-    d ={}
-    for p in phone_book:
-        d[p] =1
-    for p in phone_book:
-        temp = ""
-        for n in p:
-            temp+=n
-            if temp in d and temp != p:
-                return False
+    phone_book.sort()
+
+    for p1,p2 in zip(phone_book,phone_book[1:]):
+        if p2.startswith(p1) :
+            return False
+    
         
         
     # while(cnt<len(phone_book)-1):
