@@ -1,12 +1,12 @@
+from collections import deque
 def solution(s):
-    sum = 0
+    q = deque()
     for i in s:
-        if sum < 0:
-            return False
         if i == "(":
-            sum += 1
+            q.append("(")
         else:
-            sum -= 1
-    if sum != 0:
-        return False
-    return True
+            try:
+                q.pop()
+            except:
+                return False
+    return len(q)==0
