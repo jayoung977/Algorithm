@@ -1,6 +1,2 @@
 def solution(nums):
-    n = len(nums)//2
-    x = len(set(nums))
-    if x >= n :
-        return n
-    return x
+    return  len(nums)//2 if len(set(nums)) >= len(nums)//2 else len(set(nums))
