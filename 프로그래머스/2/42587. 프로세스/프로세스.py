@@ -1,13 +1,13 @@
+from collections import deque
 def solution(priorities, location):
-    jobs = len(priorities)
-    cursor = 0
+    queue = deque((i,p) for i,p in enumerate(priorities))
     answer = 0
-    while True:
-        if max(priorities)==priorities[cursor%jobs]:
-            priorities[cursor%jobs]=0
+    while queue:
+        cur = queue.popleft()
+        if any(cur[1] < p for i,p in queue):
+            queue.append(cur)
+        else:
             answer+=1
-            if cursor%jobs==location:
+            if cur[0]==location:
                 return answer
-
-        cursor+=1
     return answer
