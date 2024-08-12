@@ -1,19 +1,17 @@
+import math
 from collections import deque
-from math import ceil
 def solution(progresses, speeds):
-    q = deque()
-    q.append(0)
-    answer = [0]
-    idx = 0
+    dist_days = deque()
+    answer = []
     for p,s in zip(progresses,speeds):
-        print(q)
-        day = ceil((100-p)/s)
-        if  day > q[-1] :
-            q.append(day)
+        day = math.ceil((100-p)/s)
+        if len(dist_days)==0 or (len(dist_days)>0 and dist_days[-1]<day):
+            dist_days.append(day)
             answer.append(1)
-            idx+=1
         else:
-            answer[idx]+=1
+            answer[-1]+=1
+            
+        
         
     
-    return answer[1:]
+    return answer
