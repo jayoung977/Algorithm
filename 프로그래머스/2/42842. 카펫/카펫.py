@@ -1,12 +1,12 @@
 def solution(brown, yellow):
-    answer = []
-    for h in range(1,int(yellow**(1/2))+1):
-        w = yellow // h
-        if(yellow % h == 0 and (w+h)*2+4 == brown):
-            
-            print(w+2,h+2)
-            answer+=[w+2,h+2]
-            
-    
-    
-    return answer
+    a = 1
+    b = -(brown+4)/2
+    c = brown+yellow
+    check = b**2-4*a*c
+    if check>0:
+        return [(-b+check**(1/2))/(2*a),(-b-check**(1/2))/(2*a)]
+    elif check==0:
+        return [(-b+check**(1/2))/(2*a),(-b+check**(1/2))/(2*a)]
+        
+    # answer = []
+    # return answer
