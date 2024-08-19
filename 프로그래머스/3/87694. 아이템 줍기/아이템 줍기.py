@@ -4,31 +4,31 @@ def solution(rectangle, characterX, characterY, itemX, itemY):
     graph = [[-1]*102 for _ in range(102)]
     visited = [[0]*102 for _ in range(102)]
     
-    # 길이가 1인 모든 선분 저장
-    edges = set()
     for elem in rectangle:
-        lx,ly,rx,ry = map(lambda x:x*2, elem)
-        for i in range(lx, rx+1):
-            for j in range(ly, ry+1):
-                if lx<i<rx and ly<j<ry:
-                    graph[i][j] = 0
-                elif graph[i][j] != 0:
-                    graph[i][j] = 1
-            
-    # bfs 시작
-    dxs = [0,0,1,-1]
-    dys = [1,-1,0,0]
-    q = deque()
-    q.append((characterX*2,characterY*2))
-    while q:
-        x, y = q.popleft()
+        lx,ly,rx,ry = map(lambda x: x*2, elem)
+        for x in range(lx,rx+1):
+            for y in range(ly,ry+1):
+                if lx<x<rx and ly<y<ry:
+                    graph[y][x]=0
+                elif graph[y][x]!=0:
+                    graph[y][x]=1
+    
+    dx = [-1,0,1,0]
+    dy = [0,-1,0,1]
+    
+    queue = deque()
+    queue.append((characterX*2, characterY*2))
+    
+    while queue:
+        x,y = queue.popleft()
         if x == itemX*2 and y == itemY*2:
-            answer = visited[x][y]//2
-            break
-        for dx, dy in zip(dxs, dys):
-            nx, ny = dx+x, dy+y
-            if 0<nx<102 and 0<ny<102 and not visited[nx][ny]:
-                if graph[nx][ny] == 1:
-                    visited[nx][ny] = visited[x][y] + 1
-                    q.append((nx,ny))
+            return visited[y][x]//2
+        for i,j in zip(dx,dy):
+            nx,ny = x+i, y+j
+            if not (0<=nx<102 and 0<=ny<102) :
+                continue
+            if visited[ny][nx]==0 and graph[ny][nx]==1:
+                visited[ny][nx]=visited[y][x]+1
+                queue.append((nx, ny))
+        
     return answer
