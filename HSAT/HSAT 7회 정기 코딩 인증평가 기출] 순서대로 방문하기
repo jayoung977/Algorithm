@@ -1,0 +1,45 @@
+
+https://softeer.ai/app/assessment/index.html?xid=257339&xsrfToken=gv4wALGTQc842zdK9SFye4x5WUhJ73Jf&testType=practice
+
+import sys
+
+path_list = []
+dr = [0,1,0,-1]
+dc = [1,0,-1,0]
+answer=0
+def dfs(r,c,path,before):
+    # print("({},{}),before:{},{}".format(r,c,before,path))
+    # print(r,c,m_list[-1], (r,c) == m_list[-1])
+    global path_list,answer
+    if (r,c) in m_list[1:] :
+        if before!= m_list[m_list.index((r,c))-1]:
+            # print("return")
+            return
+        else:
+            before = (r,c)
+    if (r,c) == m_list[-1]:
+        answer+=1
+        # print(answer)
+        return
+    for d in range(4):
+        nr,nc = r+dr[d],c+dc[d]
+        if not(0<=nr<n and 0<=nc<n)  or visited[nr][nc] == 1 or data[nr][nc]==1:
+            continue
+        visited[nr][nc]=1
+        dfs(nr,nc,path+[(nr,nc)],before)
+        visited[nr][nc]=0
+        
+    
+    
+    
+
+
+n,m = map(int,sys.stdin.readline().split())
+data = [ list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+m_list = [ tuple(map(lambda x: int(x)-1, sys.stdin.readline().split())) for _ in range(m)]
+# print(m_list)
+visited = [ [0]*n for _ in range(n)]
+visited[m_list[0][0]][m_list[0][1]]=1
+
+dfs(m_list[0][0],m_list[0][1],[m_list[0]],m_list[0])
+print(answer)
