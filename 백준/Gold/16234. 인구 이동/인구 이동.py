@@ -1,63 +1,50 @@
-from collections import deque
-
-dr = [-1, 0, 1, 0]
-dc = [0, 1, 0, -1]
-
-
-def bfs(r, c):
-    visited[r][c] = True
-    q = deque([(r, c)])
-    q_united = deque([(r, c)])
-    while (len(q) > 0):
-        r, c = q.pop()
-        # print("R,c:(", r, c, ")")
-        population = data[r][c]
+def dfs(r, c):
+    global visited, path, tot
+    stack = [(r, c)]
+    while stack:
+        r, c = stack.pop()
         for d in range(4):
-            nr = r + dr[d]
-            nc = c + dc[d]
-            if (not (0 <= nr < N and 0 <= nc < N)):
+            nr, nc = r + dr[d], c + dc[d]
+            if not (0 <= nr < N and 0 <= nc < N) or visited[nr][nc] == 1:
                 continue
-            if (visited[nr][nc]):
-                continue
-            if (L <= abs(data[nr][nc]-population) <= R):
-                visited[nr][nc] = True
-                q.append((nr, nc))
-                q_united.append((nr, nc))
-            # print(data[nr][nc], population)
-            # print(abs(data[nr][nc]-population))
-            # if(L<=abs(data[nr][nc]-population)<=R):
-    # print(q_united)
-    if (len(q_united) > 1):
-        sum_pop = 0
-        for r, c in q_united:
-            sum_pop += data[r][c]
-        new_population = int(sum_pop/len(q_united))
-        # print("new_population:", new_population)
-        for r, c in q_united:
-            data[r][c] = new_population
-        # print(data)
-        return True
-
-    return False
+            if L <= abs(data[nr][nc] - data[r][c]) <= R:
+                visited[nr][nc] = 1
+                path.append((nr, nc))
+                tot += data[nr][nc]
+                stack.append((nr, nc))
 
 
-N, L, R = map(int, input().split())
+
+N,L,R = map(int,input().split())
 data = [list(map(int, input().split())) for _ in range(N)]
-# print(data)
-# BFS
+dr = [-1,0,1,0]
+dc = [0,1,0,-1]
+answer = 0
 
-cnt = 0
-while (True):
-    visited = [[False] * N for _ in range(N)]
-    flag = False
+while True:
+    visited = [[0]*N for _ in range(N)]
+    moved = False
     for i in range(N):
         for j in range(N):
-            if (visited[i][j]):
-                continue
-            if (bfs(i, j)):  # 한번이라도 인구 이동 있다면
-                flag = True
-    if (not flag):
+            if visited[i][j]!=1:
+                visited[i][j]=1
+                path = []
+                path.append((i,j))
+                tot = data[i][j]
+                dfs(i,j)
+                if len(path)>1:
+                    moved = True
+                    new_pop = tot//len(path)
+                    for r,c in path:
+                        data[r][c]=new_pop
+    if moved :
+        answer+=1
+    else:
+        print(answer)
         break
-    cnt += 1
 
-print(cnt)
+# 4 10 40
+# 10 20 25 90
+# 40 30 30 35
+# 10 80 30 75
+# 10 80 30 35
