@@ -1,33 +1,38 @@
-import sys
-n = int(sys.stdin.readline())
-data = list(map(int, sys.stdin.readline().split()))
+def dfs(total,op_list,depth,num_list):
+    global max_ans,min_ans
+    if depth == len(num_list)-1:
+        max_ans = max(total,max_ans)
+        min_ans = min(total,min_ans)
+        return
+    
+    for i in range(len(op_list)):
+        if op_list[i]<=0:
+            continue
+
+        op_list[i]-=1
+
+        if i == 0:
+            dfs(total+num_list[depth+1],op_list,depth+1,num_list)
+            
+        elif i == 1:
+            dfs(total-num_list[depth+1],op_list,depth+1,num_list)
+        elif i == 2:
+            dfs(total*num_list[depth+1],op_list,depth+1,num_list)
+        else:
+            if total<0:
+                dfs(((-1*total)//num_list[depth+1])*-1,op_list,depth+1,num_list)
+            else: 
+                dfs(total//num_list[depth+1],op_list,depth+1,num_list)
+        op_list[i]+=1
+    return 
+            
 
 
-min_result = 1e9
-max_result = -1e9
 
-from itertools import permutations
-op_list = list(map(int,sys.stdin.readline().split()))
-op = []
-for i in range(len(op_list)):
-    for j in range(op_list[i]):
-        op.append(i)
-for case in permutations(op,n-1):
-    result = data[0]
-    for i in range(1,len(data)):
-        if case[i-1] == 0:
-            result += data[i]
-        if case[i-1] == 1:
-            result -= data[i]
-        if case[i-1] == 2:
-            result *= data[i]
-        if case[i-1] == 3:
-            result /= data[i]
-            result = int(result)
-
-    min_result = min(min_result, result)
-    max_result = max(max_result, result)
-
-
-print(max_result)
-print(min_result)
+N = int(input())
+num_list = list(map(int,input().split()))
+op_list = list(map(int,input().split()))
+max_ans,min_ans = -1e9,1e9
+dfs(num_list[0],op_list,0,num_list)
+print(max_ans)
+print(min_ans)
