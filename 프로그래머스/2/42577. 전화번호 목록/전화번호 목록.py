@@ -1,9 +1,6 @@
 def solution(phone_book):
-    d = dict.fromkeys(phone_book,1)
-    for num in phone_book:
-        temp = ""
-        for n in num:
-            temp+=n
-            if temp in d and temp!=num:
-                return False
+    phone_book.sort()
+    for i in range(1,len(phone_book)):
+        if phone_book[i].startswith(phone_book[i-1]):
+            return False 
     return True
