@@ -1,17 +1,22 @@
-import math
-from collections import deque
+from math import ceil
 def solution(progresses, speeds):
-    dist_days = deque()
+    stack = []
     answer = []
+    cnt = 0
     for p,s in zip(progresses,speeds):
-        day = math.ceil((100-p)/s)
-        if len(dist_days)==0 or (len(dist_days)>0 and dist_days[-1]<day):
-            dist_days.append(day)
-            answer.append(1)
+        cost = ceil((100-p)/s)
+        if stack:
+            if stack[-1]>=cost:
+                answer[cnt]+=1
+            else:
+                stack.pop()
+                cnt+=1
+                answer.append(1)
+                stack.append(cost)
+                
         else:
-            answer[-1]+=1
+            answer.append(1)
+            stack.append(cost)
             
-        
-        
     
     return answer
