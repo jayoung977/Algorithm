@@ -1,17 +1,15 @@
+from heapq import heappop,heappush
 def solution(sequence, k):
-    l = r = 0
-    answer = [0, len(sequence)]
-    sum = sequence[0]
+    start_idx,end_idx=0,0
+    sum_value=0
+    hq = []
+    for end_idx in range(len(sequence)):
+        sum_value+=sequence[end_idx]
+        while sum_value>k and start_idx<=end_idx:
+            sum_value-=sequence[start_idx]
+            start_idx+=1
+            # print("start_idx:{},end_idx:{},sum_value:{}".format(start_idx,end_idx,sum_value))
+        if sum_value==k:
+            heappush(hq,[end_idx-start_idx,[start_idx,end_idx]])
 
-    while True:
-        if sum < k:
-            r += 1
-            if r == len(sequence): break
-            sum += sequence[r]
-        else:
-            if sum == k:
-                if r-l < answer[1]-answer[0]:
-                    answer = [l, r]
-            sum -= sequence[l]
-            l += 1
-    return answer
+    return heappop(hq)[1]
