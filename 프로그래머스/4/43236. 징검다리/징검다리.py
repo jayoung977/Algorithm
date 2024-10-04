@@ -1,15 +1,14 @@
 def solution(distance, rocks, n):
-    left = 1
-    right = distance
     rocks.append(distance)
     rocks.sort()
-    answer=0
-    while left<=right:
+    left,right=0,distance
+    answer = 0
+    while left<=right:        
         mid = (left+right)//2
-        prev_rock = 0
-        delete = 0
+        prev_rock=0
+        delete=0
         for rock in rocks:
-            dist = rock-prev_rock
+            dist=rock-prev_rock
             if dist<mid:
                 delete+=1
                 if delete>n:
@@ -17,8 +16,9 @@ def solution(distance, rocks, n):
             else:
                 prev_rock=rock
         if delete>n:
-            right = mid-1
+            right=mid-1
         else:
-            answer = mid
-            left = mid+1
+            left=mid+1
+            answer = max(answer,mid)
+    
     return answer
