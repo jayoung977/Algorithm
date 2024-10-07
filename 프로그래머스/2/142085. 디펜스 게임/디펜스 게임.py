@@ -11,7 +11,7 @@ def solution(n, k, enemy):
         while defence > n and delete < k:
             defence -= -heappop(hq) 
             delete += 1
-        if defence > n and delete==k:
+        if defence > n:
             break
         else:
             answer = i + 1 
