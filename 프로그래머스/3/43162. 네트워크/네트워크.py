@@ -1,18 +1,18 @@
-visited = []
-def dfs(i,computers):
-    visited[i]=True
-    for j,is_connect in enumerate(computers[i]):
-        if j!=i and is_connect==1 and not visited[j]:
-            visited[j]=True
-            dfs(j,computers)
-    return
-
 def solution(n, computers):
-    global visited
-    visited = [False]*n
+    def dfs(s,visited,path):
+        for e,iscon in enumerate(computers[s]):
+            if e==s:
+                continue
+            if e not in visited and iscon==1:
+                visited.add(e)
+                path+=[e]
+                dfs(e,visited,path)
     answer = 0
-    for i in range(n):
-        if not visited[i]:
-            dfs(i,computers)
-            answer+=1    
+    visited = set()
+    for s in range(n):
+        if s not in visited:
+            visited.add(s)
+            path=[s]
+            dfs(s,visited,path)
+            answer+=1
     return answer
