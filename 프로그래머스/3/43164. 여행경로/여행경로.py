@@ -1,14 +1,15 @@
-from collections import deque
 def solution(tickets):
-    queue = deque()
-    queue.append(( "ICN" ,["ICN"],[]))
-    answer= []
-    while queue:
-        start,path,visited = queue.popleft()
-        if len(visited) == len(tickets):
+    def dfs(s,visited,path,answer):
+        if len(visited)==len(tickets):
             answer.append(path)
-        for idx,(s,e) in enumerate(tickets):
-            if s==start and idx not in visited:
-                queue.append((e,path+[e],visited+[idx]))
+            return
+        for i,(ns,ne) in enumerate(tickets):
+            if i not in visited and ns == s:
+                dfs(ne, visited+[i],path+[ne],answer)
+                
+        return
+    tickets.sort()
+    answer = []
+    dfs("ICN",[],["ICN"],answer)
     answer.sort()
     return answer[0]
