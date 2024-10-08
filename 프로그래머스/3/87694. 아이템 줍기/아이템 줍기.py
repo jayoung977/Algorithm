@@ -1,34 +1,37 @@
 from collections import deque
 def solution(rectangle, characterX, characterY, itemX, itemY):
+    n=51*2
+    graph = [[-1]*n for _ in range(n)]
+    visited = [[0]*n for _ in range(n)]
+    dr,dc = [0,1,0,-1],[-1,0,1,0]
     answer = 0
-    graph = [[-1]*102 for _ in range(102)]
-    visited = [[0]*102 for _ in range(102)]
-    
-    for elem in rectangle:
-        lx,ly,rx,ry = map(lambda x: x*2, elem)
-        for x in range(lx,rx+1):
-            for y in range(ly,ry+1):
-                if lx<x<rx and ly<y<ry:
+    for rect in rectangle:
+        lx,ly,rx,ry = map(lambda x:x*2, rect)
+        for y in range(ly,ry+1):
+            for x in range(lx,rx+1):
+                if ly<y<ry and lx<x<rx:
                     graph[y][x]=0
                 elif graph[y][x]!=0:
                     graph[y][x]=1
+                    
+    characterX, characterY =  characterX*2, characterY*2
+    itemX, itemY =  itemX*2, itemY*2
     
-    dx = [-1,0,1,0]
-    dy = [0,-1,0,1]
+    q = deque([(characterY, characterX,0)])
+    visited[characterY][characterX]=1
     
-    queue = deque()
-    queue.append((characterX*2, characterY*2))
-    
-    while queue:
-        x,y = queue.popleft()
-        if x == itemX*2 and y == itemY*2:
-            return visited[y][x]//2
-        for i,j in zip(dx,dy):
-            nx,ny = x+i, y+j
-            if not (0<=nx<102 and 0<=ny<102) :
+    while q:
+        r,c,cnt=q.popleft()
+        if r == itemY and c == itemX:
+            answer=cnt//2
+            break
+        for d in range(4):
+            nr,nc = r+dr[d], c+dc[d]
+            if not (0<=r<n and 0<=c<n):
                 continue
-            if visited[ny][nx]==0 and graph[ny][nx]==1:
-                visited[ny][nx]=visited[y][x]+1
-                queue.append((nx, ny))
-        
+            if visited[nr][nc]==1 or graph[nr][nc]!=1:
+                continue
+            visited[nr][nc]=1
+            q.append((nr,nc,cnt+1))
+                
     return answer
