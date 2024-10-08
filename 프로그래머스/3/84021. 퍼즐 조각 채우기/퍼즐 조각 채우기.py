@@ -1,84 +1,79 @@
 def solution(game_board, table):
-    
-    m = len(game_board)
-    n = len(game_board[0])
-
-    dr = [-1,0,1,0]
-    dc = [0,1,0,-1]
-    
-    def dfs(board,r,c,state,path,visited):
-        for d in range(4):
-            nr,nc = r+dr[d],c+dc[d]
-            # print("nr:{},nc:{}".format(nr,nc))
-            if not(0<=nr<m and 0<=nc<n):
-                continue
-            if visited[nr][nc]==0 and board[nr][nc]==state:
+    def dfs(r,c,value,graph,visited,path):
+        stack=[(r,c)]
+        while stack:
+            r,c=stack.pop()
+            for d in range(4):
+                nr,nc=r+dr[d],c+dc[d]
+                if not(0<=nr<n and 0<=nc<n):
+                    continue
+                if visited[nr][nc] or graph[nr][nc]!=value:
+                    continue
                 visited[nr][nc]=1
-                path.append((nr,nc))
-                dfs(board,nr,nc,state,path,visited)
-
-    def find_blocks(board,state):
-        visited = [ [0]*n for _ in range(m)]
-        result = [] 
-        result_table = []
+                path+=[(nr,nc)]
+                stack.append((nr,nc))
+        return
+    
+    def toblock(blocks):
+        nblocks=[]
+        for block in blocks:
+            minr,minc,maxr,maxc=n,n,0,0
+            for r,c in block:
+                minr,minc = min(r,minr),min(c,minc)
+                maxr,maxc = max(r,maxr),max(c,maxc)
+            fr,fc = maxr-minr+1,maxc-minc+1
+            nblock=[[0]*fc for _ in range(fr)]
+            for r,c in block:
+                nblock[r-minr][c-minc]=1
+            nblocks.append((nblock,len(block)))
+        return nblocks
+    
+    def rotate(block):
+        m,n=len(block),len(block[0])
+        nblock=[[0]*m for _ in range(n)]
         for i in range(m):
             for j in range(n):
-                if visited[i][j]==0 and board[i][j]==state:
-                    visited[i][j] = 1
-                    path = [(i,j)]
-                    dfs(board,i,j,state,path,visited)
-                    result.append(path)
-        # print("r:{},c:{},path:{}".format(r,c,path))
-        return result
-    
-    def make_table(block):
-        y,x = zip(*block)
-        r,c = max(y)-min(y)+1,max(x)-min(x)+1
-        table = [[0]*c for _ in range(r)]
-        
-        for i,j in block:
-            table[i-min(y)][j-min(x)]=1
-        return table
-
-    def rotate(puzzle):
-        c = len(puzzle[0])
-        r = len(puzzle)
-        count = 0
-        rotate = [[0]*r for _ in range(c)]
-        for i in range(r):
-            for j in range(c):
-                if puzzle[i][j]==1:
-                    count+=1
-                rotate[j][r-1-i]=puzzle[i][j]
-        return rotate,count
-    
-    empty_blocks = find_blocks(game_board,0)
-    puzzles = find_blocks(table,1)
+                nblock[j][m-1-i]=block[i][j]
+        return nblock
+            
+                
     answer = 0
-    for empty in empty_blocks:
-        Filled = False
-        empty_table = make_table(empty)
-        for puzzle_origin in puzzles:
-            if Filled:
-                break
-            puzzle_table = make_table(puzzle_origin)
-            for i in range(4):
-                puzzle_table, count = rotate(puzzle_table)
-                if empty_table==puzzle_table:
-                    answer+=count
-                    Filled=True
-                    puzzles.remove(puzzle_origin)
-                    break
-        for puzzle_origin in puzzles:
-            if Filled:
-                break
-            puzzle_table = make_table(puzzle_origin)
-            for i in range(4):
-                puzzle_table, count = rotate(puzzle_table)
-                if empty_table==puzzle_table:
-                    answer+=count
-                    Filled=True
-                    puzzles.remove(puzzle_origin)
-                    break
+    n= len(game_board)
+    gvisited= [[0]*n for _ in range(n)]
+    tvisited= [[0]*n for _ in range(n)]
+    gblocks,tblocks = [],[]
+    dr,dc = [-1,0,1,0],[0,1,0,-1]
+    for i in range(n):
+        for j in range(n):
+            if not gvisited[i][j] and game_board[i][j]==0:
+                gvisited[i][j]=1
+                gpath=[(i,j)]
+                dfs(i,j,0,game_board,gvisited,gpath)
+                gblocks.append(gpath)
+            if not tvisited[i][j] and table[i][j]==1:
+                tvisited[i][j]=1
+                tpath=[(i,j)]
+                dfs(i,j,1,table,tvisited,tpath)
+                tblocks.append(tpath)
+                
+    gblocks,tblocks = toblock(gblocks),toblock(tblocks)
+    usedblock=set()
     
+    for (emptyblock,gn) in gblocks:
+        findflag=False
+        for i,(block,tn) in enumerate(tblocks):
+            if i in usedblock or gn!=tn:
+                continue
+            
+            rotatedblock=block
+            for _ in range(4):
+                rotatedblock=rotate(rotatedblock)
+                if emptyblock == rotatedblock:
+                    usedblock.add(i)
+                    answer+=gn
+                    findflag=True
+                    break
+            if findflag:
+                break
+                
     return answer
