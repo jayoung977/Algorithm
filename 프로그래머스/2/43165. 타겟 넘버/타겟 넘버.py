@@ -1,26 +1,13 @@
-answer = 0
-temp=""
-def dfs(numbers,target):
-    global temp,answer
-    if len(temp)==len(numbers):
-        summary = 0
-        for op,n in zip(temp,numbers):
-            if op=="+":
-                summary+=n
-            else:
-                summary-=n
-        if summary==target:
-            answer+=1
-                
-        # print(temp)
-        return
-    for i in ["+","-"]:
-        temp+=i
-        dfs(numbers,target)
-        temp=temp[:-1]
-    return
-         
-        
 def solution(numbers, target):
-    dfs(numbers,target)
-    return answer
+    def dfs(x,depth,answer):
+        if depth==len(numbers)-1:
+            if x==target:
+                answer[0]+=1
+            return 
+        dfs(x+numbers[depth+1],depth+1,answer)
+        dfs(x-numbers[depth+1],depth+1,answer)
+        return 
+    
+    answer = [0]
+    dfs(0,-1,answer)
+    return answer[0]
