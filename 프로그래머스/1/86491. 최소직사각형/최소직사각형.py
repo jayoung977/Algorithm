@@ -1,12 +1,8 @@
-
 def solution(sizes):
-    sizes = [ [y,x] if x < y else [x,y] for x,y in sizes ]
-
-    max_row = 0
-    max_col = 0
-    for x,y in sizes:
-        max_row = max(max_row,x)
-        max_col = max(max_col,y)
-            
-    answer = max_row*max_col
+    for i,(w,h) in enumerate(sizes):
+        if w<h:
+            sizes[i]=[h,w]
+    h,w = zip(*sizes)
+        
+    answer = max(h)*max(w)
     return answer
