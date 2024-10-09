@@ -1,12 +1,9 @@
 def solution(brown, yellow):
-    a = 1
-    b = -(brown+4)/2
-    c = brown+yellow
-    check = b**2-4*a*c
-    if check>0:
-        return [(-b+check**(1/2))/(2*a),(-b-check**(1/2))/(2*a)]
-    elif check==0:
-        return [(-b+check**(1/2))/(2*a),(-b+check**(1/2))/(2*a)]
-        
-    # answer = []
-    # return answer
+    answer = []
+    for x in range(1,yellow+3):
+        # print(((brown+yellow)//x)-2)
+        if (((brown+yellow)//x)-2)*(x-2)==yellow:
+            answer.extend([(brown+yellow)//x,x])
+            break
+            
+    return answer
