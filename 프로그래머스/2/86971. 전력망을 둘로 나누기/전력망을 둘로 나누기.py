@@ -1,29 +1,30 @@
-def dfs(num):
-    global visited,result,li
-    for i in li[num]:
-        if not visited[i]:
-            visited[i]=True
-            result+=1           
-            dfs(i)
-    return 
-
+from collections import deque
 def solution(n, wires):
-    global visited,result,li
-    li = [[] for _ in range(n+1)]
-    
-    answer = 1e9
+    graph = [[] for _ in range(n+1)]
     for s,e in wires:
-        li[s].append(e)
-        li[e].append(s)
+        graph[s].append(e)
+        graph[e].append(s)
         
+    answer = n
     for s,e in wires:
-        li[s].remove(e)
-        li[e].remove(s)
-        visited = [False]*(n+1)
-        visited[1]=True
-        result = 1
-        dfs(1)
-        answer = min(abs(2*result-n),answer)
-        li[s].append(e)
-        li[e].append(s)
+        graph[s].remove(e)
+        graph[e].remove(s)
+        
+        q = deque([(1,1)])
+        visited=set([1,])
+        while q:
+            v,cnt = q.popleft()
+            wire_part=cnt
+            for nv in graph[v]:
+                if nv in visited:
+                    continue
+                visited.add(nv)
+                q.append((nv,cnt+1))
+        result = abs(n-(len(visited)*2))
+        answer=min(result,answer)
+        
+        graph[s].append(e)
+        graph[e].append(s)
+
+    
     return answer
