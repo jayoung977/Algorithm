@@ -1,10 +1,8 @@
-from collections import deque
 def solution(arr):
-    que = deque()
-    que.append(arr[0])
-    for i in range(1,len(arr)):
-        if arr[i] != que[-1]:
-            que.append(arr[i])
+    answer = []
+    for n in arr:
+        if answer and answer[-1]==n:
+            continue
+        answer.append(n)
     
-
-    return list(que)
+    return answer
