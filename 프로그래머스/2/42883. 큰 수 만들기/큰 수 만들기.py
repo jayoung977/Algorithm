@@ -1,10 +1,12 @@
 def solution(number, k):
-    stack = []
-    for n in number:
-        while stack and  k>0 and n>stack[-1]:
+    stack=[]
+    for num in number:
+        while stack and k>0 and stack[-1]<num:
             stack.pop()
             k-=1
-        stack.append(n)
+        stack.append(num)
     if k>0:
         stack=stack[:-k]
-    return ''.join(stack)
+        
+    answer = ''.join(stack)
+    return answer
