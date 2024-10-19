@@ -1,16 +1,12 @@
 from collections import deque
 def solution(prices):
-    price_que = deque(prices)    
+    q = deque([ (p,i) for i,p in enumerate(prices)])
     answer = [0]*len(prices)
-    cnt = 0
-    while price_que:
-        current_price = price_que.popleft()
-        for next_price in price_que:
-            answer[cnt]+=1
-            if next_price < current_price:
+    while q:
+        p,i = q.popleft()
+        for np,ni in q:
+            answer[i]+=1
+            if p>np:
                 break
-            # else:
-                
-        cnt+=1
-        
+            
     return answer
