@@ -1,12 +1,12 @@
 def solution(clothes):
-    d = {}
-    for v,k in clothes:
-        if k not in d:
-            d[k]=2 
-        else:
-            d[k]+=1
-        
+    dic = {}
+    for cloth,kind in clothes:
+        if kind in dic:
+            dic[kind]+=[cloth]
+            continue         
+        dic[kind]=[cloth]
+
     answer = 1
-    for v in d.values():
-        answer*=v
+    for kind in dic:
+        answer*=(len(dic[kind])+1)
     return answer-1
