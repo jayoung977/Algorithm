@@ -1,15 +1,19 @@
 def solution(tickets):
-    def dfs(s,visited,path,answer):
+    def dfs(airport,visited,path):
+        # print(airport,visited,path)
         if len(visited)==len(tickets):
             answer.append(path)
             return
-        for i,(ns,ne) in enumerate(tickets):
-            if i not in visited and ns == s:
-                dfs(ne, visited+[i],path+[ne],answer)
-                
+            
+        for i,(s,e) in enumerate(tickets):
+            if s == airport and i not in visited:
+                dfs(e,visited+[i],path+[e])
         return
-    tickets.sort()
+                
+        
+        
+    
     answer = []
-    dfs("ICN",[],["ICN"],answer)
+    dfs("ICN",[],["ICN"])
     answer.sort()
     return answer[0]
