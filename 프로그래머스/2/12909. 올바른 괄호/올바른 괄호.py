@@ -1,14 +1,12 @@
 def solution(s):
-    if s[0]==")" or len(s)%2!=0:
-        return False
     stack = []
-    for elem in s:
-        if stack and stack[-1]!=elem:
+    for item in s:
+        if not stack and item==")":
+            return False
+        if stack and stack[-1]!=item:
             stack.pop()
             continue
-        if elem == ")":
-            return False
-        stack.append(elem)
+        stack.append(item)
     if stack:
         return False
 
