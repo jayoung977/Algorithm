@@ -1,6 +1,8 @@
 def solution(phone_book):
     phone_book.sort()
-    for i in range(1,len(phone_book)):
-        if phone_book[i].startswith(phone_book[i-1]):
-            return False 
+    stack = []
+    for p in phone_book:
+        if stack and p.startswith(stack[-1]):
+            return False
+        stack.append(p)
     return True
