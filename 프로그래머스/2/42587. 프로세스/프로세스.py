@@ -1,20 +1,15 @@
 from collections import deque
 def solution(priorities, location):
-    q = deque()
-    for i,p in enumerate(priorities):
-        q.append((p,i))
-    priorities.sort(reverse=True)
-    max_p = priorities[0]
-    idx = 0
+    q = deque([(p,i) for i,p in enumerate(priorities)])
+    q_sort = sorted(priorities)
+    answer = 0
     while q:
         p,i = q.popleft()
-        if p!=max_p:
-            q.append((p,i))
+        if q_sort[-1]==p:
+            q_sort.pop()
+            answer+=1
+            if i == location:
+                return answer
             continue
-        #같으면 
-        if i == location:
-            return idx+1
-        idx+=1
-        max_p = priorities[idx]
-        
-    return answer
+        q.append((p,i))
+    return 
