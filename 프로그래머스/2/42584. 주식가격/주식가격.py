@@ -1,12 +1,14 @@
 from collections import deque
 def solution(prices):
-    q = deque([ (p,i) for i,p in enumerate(prices)])
-    answer = [0]*len(prices)
+    answer = []
+    q = deque(prices)
+    idx = 0
     while q:
-        p,i = q.popleft()
-        for np,ni in q:
-            answer[i]+=1
-            if p>np:
+        now = q.popleft()
+        answer.append(0)
+        for nex in q:
+            answer[-1]+=1
+            if nex < now:
                 break
             
     return answer
