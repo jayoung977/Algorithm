@@ -1,15 +1,21 @@
 from collections import deque
 def solution(priorities, location):
-    q = deque([(p,i) for i,p in enumerate(priorities)])
-    q_sort = sorted(priorities)
+    q = deque()
+    for i,p in enumerate(priorities):
+        q.append((p,i))
+    priorities.sort() 
+    
     answer = 0
     while q:
-        p,i = q.popleft()
-        if q_sort[-1]==p:
-            q_sort.pop()
+        p,i =q.popleft()
+        if p!=priorities[-1]:
+            q.append((p,i))
+        else:
             answer+=1
             if i == location:
                 return answer
-            continue
-        q.append((p,i))
-    return 
+            priorities.pop()
+            
+
+    
+    return answer
