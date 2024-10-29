@@ -1,32 +1,25 @@
-import heapq
+from heapq import heappush,heappop
 def solution(operations):
-    heap = []
-    for i in operations:
-        op,num = i.split(" ")
-        num=int(num)
-        if op=="I":
-            heapq.heappush(heap,num)
-        elif len(heap) > 0:
-            if op=="D" and num==1:
-                heap_max = [ h*-1 for h in heap]
-                heapq.heapify(heap_max)
-                heapq.heappop(heap_max)
-                heap = [ h*-1 for h in heap_max]
-                heapq.heapify(heap)
-            else:
-                heapq.heappop(heap)
+    min_hq = []
+    max_hq = []
+    answer = []
 
-    answer = [0,0]
-    # print(heap)
-    if len(heap) == 1:
+    for s in operations:
+        op,n = s.split(" ")
+        n = int(n)
         
-        n = heapq.heappop(heap)
-        answer = [n,n]
-    elif len(heap) > 1:
-        n = heapq.heappop(heap)
-        heap_max = [ h*-1 for h in heap]
-        heapq.heapify(heap_max)
-        m = heapq.heappop(heap_max)*-1
-        # print(n,m)
-        answer = [m,n]
-    return answer
+        if op == "I":
+            heappush(min_hq,n)
+            heappush(max_hq,-n)
+            
+        elif max_hq and op == "D":
+            if n == 1:
+                min_hq.remove(-heappop(max_hq))
+            else:
+                max_hq.remove(-heappop(min_hq))
+        # print(min_hq,max_hq)
+        
+    if not max_hq and not min_hq:
+        return [0,0]
+    
+    return [-heappop(max_hq),heappop(min_hq)]
