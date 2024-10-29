@@ -1,21 +1,22 @@
-import heapq
-def cal(l1,l2):
-    return l1+(l2*2)
+from heapq import heappop,heappush,heapify
+def cal(a,b):
+    return a+(b*2)
 
 def solution(scoville, K):
-    heapq.heapify(scoville)
     answer = 0
-    while len(scoville)>1:
-        l1 = heapq.heappop(scoville)
-        if l1 < K:
-            l2 = heapq.heappop(scoville)
-            new_food = cal(l1,l2)
-            heapq.heappush(scoville,new_food)
-            answer+=1
-        else:
+    heapify(scoville)
+
+    while scoville:
+        if scoville[0]>=K:
             return answer
         
-    if heapq.heappop(scoville) >=K:
-        return answer
-            
+        if len(scoville)>=2:
+            a = heappop(scoville)
+            b = heappop(scoville)
+            new = cal(a,b)
+            answer +=1
+            heappush(scoville,new)
+        else:
+            break
+        
     return -1
