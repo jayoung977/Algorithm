@@ -1,28 +1,39 @@
-
+from collections import deque
 def solution(genres, plays):
-    d = {}
-    l = {}
-    for i in range(len(genres)):
-        if genres[i] not in d:
-            d[genres[i]]= 0
-            l[genres[i]]= []
-        d[genres[i]] += plays[i]
-        l[genres[i]].append([plays[i],i])
-    for genre in d:
-        d_sorted = sorted(d, key=lambda x:d[x], reverse=True)
-        l[genre] = sorted(l[genre],key=lambda x:x[0],reverse=True)[:2]
-        l[genre] = [ y for x,y in l[genre]]
-    answer = []
-    for genre in d_sorted:
-        answer += l[genre]
-        
-        
-    # print(d_sorted)
-    # print(l)
+    li = []
+    dic = {}
+    for i,(g,p) in enumerate(zip(genres, plays)):
+        if g in dic:
+            dic[g]+=p
+        else:
+            dic[g]=p
+    for i,(g,p) in enumerate(zip(genres, plays)):
+        li.append((-dic[g],g,-p,i))
+    li.sort()
+    q = deque(li)
     
-#     for genre in d:
+    cnt=2
+    nowg = li[0][1]
+    answer = []
+    while q:
+        now = q.popleft()
+        if now[1]!=nowg:
+            nowg=now[1]
+            cnt=2
+            
+        if cnt >0:
+            answer.append(now[-1])
+            cnt-=1
         
-#         answer
-
+            
+        
+        
+        
+    
+    
+            
+        
+        
+        
     
     return answer
