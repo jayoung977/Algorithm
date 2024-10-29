@@ -1,29 +1,24 @@
+from heapq import heappop,heappush
 def solution(n, costs):
-    def find_parent(x):
-        if parent[x]!=x:
-            parent[x]=find_parent(parent[x])
-        return parent[x]
-    
-    def union(a,b):
-        a = find_parent(a)
-        b = find_parent(b)
-        if a < b:
-            parent[b]=a
-        else:
-            parent[a]=b
-        return
-    
-    parent = [ i for i in range(n)]
-    costs.sort(key=lambda x:x[2])
+    graph = [[] for _ in range(n)]
+    for s,e,w in costs:
+        graph[s].append((e,w))
+        graph[e].append((s,w))
+    hq= []
+    heappush(hq,(0,0))
+    visited = set()
+    cnt = n
     answer = 0
-    for s,e,cost in costs:
-        if find_parent(s)!=find_parent(e):
-            union(s,e)
-            answer+=cost
-            
+    while cnt>0 :
+        w,n = heappop(hq)
+        if n in visited:
+            continue
+        visited.add(n)
+        answer+=w
+        for nn,nw in graph[n]:  
+            heappush(hq,(nw,nn))
         
-    # print(costs)
-            
-            
-    
+        cnt-=1
+        
+        
     return answer
