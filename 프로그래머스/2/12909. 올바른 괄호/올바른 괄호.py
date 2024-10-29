@@ -1,13 +1,19 @@
 def solution(s):
-    stack = []
-    for item in s:
-        if not stack and item==")":
-            return False
-        if stack and stack[-1]!=item:
-            stack.pop()
-            continue
-        stack.append(item)
+    stack =[]
+    for i in s:
+        if stack:
+            if stack[-1]!=i:
+                stack.pop()
+            else:
+                stack.append(i)
+        else:
+            if i == ")":
+                return False
+            else:
+                stack.append(i)
+                
     if stack:
         return False
+                
 
     return True
