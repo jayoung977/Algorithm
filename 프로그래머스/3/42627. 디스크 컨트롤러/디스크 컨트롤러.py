@@ -1,21 +1,23 @@
+from heapq import heappush,heappop
 from collections import deque
-import heapq
 def solution(jobs):
-    jobs.sort()  #시간순
-    process = deque([(y,x) for x,y in jobs])
-       
-    heap = [] 
-    heapq.heappush(heap,process.popleft())
+    answer = 0
+    jobs.sort()
+    end = 0
     
-    now = 0
-    total = 0
-    while heap:
-        duration, start = heapq.heappop(heap) 
-        now = max(now+duration,start+duration)
-        total += (now-start)
-        while len(process)>0 and now>=process[0][1]:
-            heapq.heappush(heap,process.popleft()) 
-        if len(process)>0 and len(heap)==0 :
-            heapq.heappush(heap,process.popleft()) 
+    q = deque([(t,s) for s,t in jobs])
+    hq = []
+    heappush(hq,(q.popleft()))
+    while hq:
+        t,s = heappop(hq)
+        end = max(end+t,s+t)
+        answer+=end-s
+        cnt = len(q)
+        while q and q[0][1]<=end:
+            heappush(hq,q.popleft())
+        if q and not hq:
+            heappush(hq,q.popleft())
+                
+            
 
-    return total//len(jobs)
+    return answer//len(jobs)
