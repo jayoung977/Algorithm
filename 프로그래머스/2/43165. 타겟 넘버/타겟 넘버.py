@@ -1,13 +1,13 @@
 def solution(numbers, target):
-    def dfs(x,depth,answer):
-        if depth==len(numbers)-1:
-            if x==target:
+    def dfs(depth,num):
+        if depth == len(numbers):
+            if num == target:
                 answer[0]+=1
-            return 
-        dfs(x+numbers[depth+1],depth+1,answer)
-        dfs(x-numbers[depth+1],depth+1,answer)
-        return 
-    
+            return
+        dfs(depth+1,num+numbers[depth])
+        dfs(depth+1,num-numbers[depth])
+        return
+        
     answer = [0]
-    dfs(0,-1,answer)
+    dfs(0,0)
     return answer[0]
