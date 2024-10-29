@@ -1,18 +1,19 @@
 def solution(n, computers):
-    def dfs(s,visited,path):
-        for e,iscon in enumerate(computers[s]):
-            if e==s:
+    def dfs(num):
+        for i,con in enumerate(computers[num]):
+            if i == num or i in visited or con == 0:
                 continue
-            if e not in visited and iscon==1:
-                visited.add(e)
-                path+=[e]
-                dfs(e,visited,path)
+            visited.add(i)
+            dfs(i)
+        return
+            
+            
+            
     answer = 0
     visited = set()
-    for s in range(n):
-        if s not in visited:
-            visited.add(s)
-            path=[s]
-            dfs(s,visited,path)
+    for i in range(n):
+        if i not in visited:
+            visited.add(i)
+            dfs(i)
             answer+=1
     return answer
