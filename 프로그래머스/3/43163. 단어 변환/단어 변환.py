@@ -1,25 +1,25 @@
-from collections import deque
+from collections import Counter
 def solution(begin, target, words):
-    q = deque([(begin,0)])
+    def dfs(word,n):
+        # print(word,n)
+        if word == target:
+            answer[0] = min(n,answer[0])
+        cnt_word=Counter(word)
+        for nex in words:
+            # print(len(cnt_word-Counter(nex)))
+            if nex in visited or len(cnt_word-Counter(nex))!=1:
+                continue
+            visited.add(nex)
+            dfs(nex,n+1)
+            visited.remove(nex)
+            
+            
+            
+        
+    answer = [1e9]
     visited = set()
     visited.add(begin)
-    answer = 0
-    while q:
-        w,cnt=q.popleft()
-        if w == target:
-            answer = cnt
-            break
-        for nw in words:
-            if nw in visited:
-                continue
-            not_eq = 0
-            for idx, nww in enumerate(nw):
-                if w[idx]!=nww:
-                    not_eq+=1
-                if not_eq>1:
-                    break
-            if not_eq==1:
-                visited.add(nw)
-                q.append((nw,cnt+1))
-            
-    return answer
+    dfs(begin,0)
+    if answer[0] == 1e9:
+        return 0
+    return answer[0]
