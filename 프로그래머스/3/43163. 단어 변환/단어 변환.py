@@ -4,6 +4,7 @@ def solution(begin, target, words):
         # print(word,n)
         if word == target:
             answer[0] = min(n,answer[0])
+            return
         cnt_word=Counter(word)
         for nex in words:
             # print(len(cnt_word-Counter(nex)))
@@ -12,6 +13,7 @@ def solution(begin, target, words):
             visited.add(nex)
             dfs(nex,n+1)
             visited.remove(nex)
+        return
             
             
             
